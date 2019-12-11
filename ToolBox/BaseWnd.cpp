@@ -1,13 +1,14 @@
 #include "BaseWnd.h"
 #include <QPainter>
 #include <QStyleOption>
+#include "PluginMgr.h"
+#include <QEvent>
 
 BaseWnd::BaseWnd(QWidget *parent)
     : QWidget(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | windowFlags());
 }
-
 
 BaseWnd::~BaseWnd()
 {
@@ -21,3 +22,4 @@ void BaseWnd::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     QWidget::paintEvent(event);
 }
+

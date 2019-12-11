@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <QtInstall>MSVC2017_x86</QtInstall>
-    <QtModules>concurrent;core;gui;widgets</QtModules>
+    <QtModules>concurrent;core;gui;multimedia;opengl;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -80,22 +80,28 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>..\..\Dependency\include\webex-utils\wbxcommon;..\..\Dependency\include\webex-utils;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Dependency\include\webex-utils\wbxcommon;..\..\Dependency\include\webex-utils;.\;..\..\output\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseDlg.cpp" />
     <ClCompile Include="BaseWnd.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyOpenGlWindow.cpp" />
     <ClCompile Include="PluginMgr.cpp" />
+    <ClCompile Include="QtCameraCapture.cpp" />
+    <ClCompile Include="QtCameraWnd.cpp" />
+    <ClCompile Include="QtDrawWnd.cpp" />
     <ClCompile Include="QtGuiClass.cpp" />
     <ClCompile Include="QtTimestampWnd.cpp" />
+    <ClCompile Include="Shaders.cpp" />
     <ClCompile Include="TitleBar.cpp" />
     <ClCompile Include="ToolBox.cpp" />
     <ClCompile Include="ToolBoxLogicMgr.cpp" />
@@ -115,7 +121,12 @@
     <ClInclude Include="LocalDefine.h" />
     <QtMoc Include="TitleBar.h" />
     <QtMoc Include="QtGuiClass.h" />
+    <QtMoc Include="MyOpenGlWindow.h" />
     <ClInclude Include="PluginMgr.h" />
+    <QtMoc Include="QtDrawWnd.h" />
+    <QtMoc Include="QtCameraWnd.h" />
+    <QtMoc Include="QtCameraCapture.h" />
+    <ClInclude Include="Shaders.h" />
     <ClInclude Include="ToolBoxLogicMgr.h" />
   </ItemGroup>
   <ItemGroup>

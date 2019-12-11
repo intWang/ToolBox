@@ -2,6 +2,9 @@
 #include <memory>
 #include <mutex>
 #include "atdefs.h"
+#include "apcom/apcomptr.h"
+#include "IToolBoxLogic.h"
+#include <QLibrary>
 
 class ToolBoxLogicMgr
 {
@@ -17,17 +20,22 @@ public:
     }
 
     ~ToolBoxLogicMgr();
+    bool Init();
+    void Destory();
 
+    Logic::ITimestampPtr QueryTimestamp();
 protected:
     bool LoadToolBoxLogicModule();
+    void UnLoadToolBoxLogicModule();
 
 private:
     ToolBoxLogicMgr();
 
 protected:
     static std::unique_ptr<ToolBoxLogicMgr> m_pInstance;
-    HMODULE m_hToolBoxLogic;
-
+    CConComPtr<conIClassFactory> m_pCF;
+    Logic::IToolBoxLogicProviderPtr m_pLogicProvider = nullptr;
+    QLibrary m_dllLogic;
 };
 
 #define TOOLBOXLOGICMGR ToolBoxLogicMgr::GetInstance()

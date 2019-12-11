@@ -58,12 +58,24 @@
     <ClCompile Include="PluginMgr.cpp">
       <Filter>Singletone</Filter>
     </ClCompile>
+    <ClCompile Include="MyOpenGlWindow.cpp">
+      <Filter>ToolWnds</Filter>
+    </ClCompile>
+    <ClCompile Include="QtDrawWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QtCameraWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QtCameraCapture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ToolBox.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="QtTimestampWnd.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="BaseWnd.h">
@@ -76,6 +88,21 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="QtGuiClass.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QtTimestampWnd.h">
+      <Filter>ToolWnds</Filter>
+    </QtMoc>
+    <QtMoc Include="MyOpenGlWindow.h">
+      <Filter>ToolWnds</Filter>
+    </QtMoc>
+    <QtMoc Include="QtDrawWnd.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QtCameraWnd.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QtCameraCapture.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -93,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="PluginMgr.h">
       <Filter>Singletone</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

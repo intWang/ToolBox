@@ -3,7 +3,6 @@
 #include <memory>
 #include <mutex>
 #include "BaseWnd.h"
-#include "LocalDefine.h"
 #include "apcom/contypes.h"
 
 typedef struct _ModuleData
@@ -28,16 +27,14 @@ public:
     std::vector <ModuleData> GetModuleList();
     P(BaseWnd) CreateModule(QWidget* pParend, conREFIID riid);
     P(BaseWnd) CreateModule(QWidget* pParend, QString& strConIdText);
+    void RegisterModule(const QString& strLabel, const QString& strModuleKey);
 protected:
 
 private:
     PluginMgr();
 protected:
     static std::unique_ptr<PluginMgr> m_pInstance;
-    std::vector<ModuleData> m_vcModuleList = {
-        {MODULE_QTTIMESTAMPWND, "F1C27C8D-751E-4E03-8B8C-0F2F4CD64D60"},
-        {MODULE_WAITADD, ""}
-    };
+    std::vector<ModuleData> m_vcModuleList = {};
 };
 
 #define  PluginLoder PluginMgr::GetInstance()

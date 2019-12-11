@@ -1,20 +1,25 @@
 #pragma once
 
 #include "IToolBoxLogic.h"
-
-class TimestampImpl :public CUnknown<IToolBoxLogic::ITimestamp>
+namespace Logic
 {
-public:
-    TimestampImpl();
-    ~TimestampImpl();
-
-    virtual std::string TimeT2String(time_t tm) override;
-    virtual time_t String2TimeT(std::string) override;
-
-protected:
-    virtual conIClassFactory* ModuleGetClassFactory()
+    class TimestampImpl :public CUnknown<ITimestamp>
     {
-        return nullptr;
-    }
+    private:
+        IToolBoxLogicProviderPtr m_pServer;
+    public:
+        TimestampImpl(IToolBoxLogicProviderPtr pServer);
+        ~TimestampImpl();
 
-};
+        virtual std::string TimeT2String(time_t tm) override;
+        virtual time_t String2TimeT(std::string) override;
+
+    protected:
+        virtual conIClassFactory* ModuleGetClassFactory()
+        {
+            return nullptr;
+        }
+
+    };
+
+}

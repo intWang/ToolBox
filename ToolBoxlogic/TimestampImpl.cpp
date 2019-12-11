@@ -1,13 +1,14 @@
 #include "TimestampImpl.h"
 
-using namespace IToolBoxLogic;
-ITimestampPtr ITimestamp::CreateInstance()
+using namespace Logic;
+ITimestampPtr ITimestamp::CreateInstance(IToolBoxLogicProviderPtr pServer)
 {
-    return new TimestampImpl();
+    return new TimestampImpl(pServer);
 }
 
-TimestampImpl::TimestampImpl()
+TimestampImpl::TimestampImpl(IToolBoxLogicProviderPtr pServer)
 {
+    m_pServer = pServer;
 }
 
 TimestampImpl::~TimestampImpl()

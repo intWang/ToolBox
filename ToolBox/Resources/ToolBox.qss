@@ -11,6 +11,28 @@ QWidget#mainWindow {
 		background: rgb(50, 50, 50);
 }
 
+QLineEdit
+{
+	background: rgb(230, 230, 230);
+}
+
+QPushButton
+{
+	border-radius:3px;
+	color: black;
+	background: rgb(175, 175, 175);
+}
+
+QPushButton:hover
+{
+	 background: rgb(185, 185, 185);
+}
+
+QPushButton:pressed
+{
+	background: rgb(180, 180, 180);
+}
+
 QPushButton#minimizeButton {
 		border-radius: none;
 		border-bottom-left-radius: 4px;
