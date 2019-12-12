@@ -34,9 +34,15 @@
     <ClCompile Include="Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QtCameraCapture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="QOpenGLTest.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QtCameraCapture.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
