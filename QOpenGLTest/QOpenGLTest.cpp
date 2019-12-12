@@ -25,6 +25,13 @@ QOpenGLTest::~QOpenGLTest()
     {
         delete pcampture;
     }
+
+    if (pTex)
+    {
+        pTex->destroy();
+        delete pTex;
+        pTex = nullptr;
+    }
 }
 
 void QOpenGLTest::InitShaders()
@@ -47,10 +54,10 @@ void QOpenGLTest::InitVertex()
 {
     GLfloat vertices[] = {
         //Location         //Color          //texture 
-        -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,-1.0f, 1.0f,
-        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,-1.0f, -1.0f,
-        1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f,
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
+        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 1.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f, 0.5f, 0.0f, 0.0f,0.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 0.2f, 0.2f, 0.2f, 0.0f, 1.0f,
     };
 
     QOpenGLVertexArrayObject::Binder vaoBind(&vao);
@@ -91,8 +98,11 @@ void QOpenGLTest::LoadTexture(QVideoFrame& framData)
     //qDebug() << "frame data size :" << framData.mappedBytes();
 
     pTex = new QOpenGLTexture(QOpenGLTexture::Target::Target2D);
-    pTex->setMinificationFilter(QOpenGLTexture::Nearest);
-    pTex->setMagnificationFilter(QOpenGLTexture::Linear);
+    mFrameSize = framData.size();
+    pTex->setSize(width(), height());
+    pTex->setFormat(QOpenGLTexture::RGBFormat);
+    pTex->setWrapMode(QOpenGLTexture::ClampToEdge);
+    pTex->setMinMagFilters(QOpenGLTexture::Linear, QOpenGLTexture::Linear);
     pTex->setWrapMode(QOpenGLTexture::Repeat);
     pTex->setData(QImage::fromData(framData.bits(), nbytes));
     pTex->allocateStorage();
@@ -144,6 +154,7 @@ void QOpenGLTest::initializeGL()
         makeCurrent();
         this->LoadTexture(cloneFrame);
         this->paintGL();
+        this->update();
         doneCurrent();
     });
 }
@@ -158,7 +169,6 @@ void QOpenGLTest::paintGL()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
-    update();
     shaderProgram.bind();
     {
         if (pTex)

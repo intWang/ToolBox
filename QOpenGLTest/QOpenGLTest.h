@@ -24,7 +24,11 @@ private:
     //camera
     QCamera camera;
     QMutex mxProcess;
+    QSize mFrameSize;
 
+    float mViewAspect;
+    float mVideoAspect;
+    float mScaleFactor;
 public:
     QOpenGLTest(QWidget *parent = Q_NULLPTR);
     ~QOpenGLTest();
