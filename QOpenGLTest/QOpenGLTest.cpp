@@ -1,6 +1,9 @@
 #include "QOpenGLTest.h"
 #include "Shaders.h"
 #include <QByteArray>
+#include <QCameraInfo>
+#include <QTransform>
+
 QOpenGLTest::QOpenGLTest(QWidget *parent)
     : QOpenGLWidget(parent)
     , vbo(QOpenGLBuffer::VertexBuffer)
@@ -37,27 +40,28 @@ QOpenGLTest::~QOpenGLTest()
 void QOpenGLTest::InitShaders()
 {
     bool bSucceed = false;
-    bSucceed = shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, shaders::vertexShaderT);
+    bSucceed = shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, shaders::vertexShaderTR);
     if (!bSucceed)
     {
         qDebug() << shaderProgram.log();
     }
-    bSucceed = shaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, shaders::fragmentShaderT);
+    bSucceed = shaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, shaders::fragmentShaderTR);
     if (!bSucceed)
     {
         qDebug() << shaderProgram.log();
     }
     shaderProgram.link();
+
 }
 
 void QOpenGLTest::InitVertex()
 {
     GLfloat vertices[] = {
         //Location         //Color          //texture 
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 1.0f, 1.0f,
-        1.0f, -1.0f, 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f, 0.5f, 0.0f, 0.0f,0.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f, 0.2f, 0.2f, 0.2f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.2f, 0.2f, 0.2f, 0.0f, 1.0f,
     };
 
     QOpenGLVertexArrayObject::Binder vaoBind(&vao);
@@ -79,7 +83,7 @@ void QOpenGLTest::InitVertex()
     attr = shaderProgram.attributeLocation("aTexture");
     shaderProgram.setAttributeBuffer(attr, GL_FLOAT, sizeof(GLfloat) * 6, 2, sizeof(GLfloat) * 8);
     shaderProgram.enableAttributeArray(attr);
-
+   
     vbo.release();
 }
 
@@ -107,6 +111,15 @@ void QOpenGLTest::LoadTexture(QVideoFrame& framData)
     pTex->setData(QImage::fromData(framData.bits(), nbytes));
     pTex->allocateStorage();
     framData.unmap();
+
+    QMatrix4x4 mTrans;
+    double ang = time(NULL) % 360;
+    mTrans.rotate(ang, 1.0, 0.0, 0.0);
+    Transform(mTrans);
+
+//     glUniformMatrix4fv(loc, 1, GL_FALSE, trans.data());
+//     qDebug() << glGetString(glGetError());
+    //shaderProgram.setUniformValue("transform", QMatrix4x4(trans));
 }
 
 void QOpenGLTest::LoadTexture(QString strPicDir)
@@ -123,6 +136,8 @@ void QOpenGLTest::LoadTexture(QString strPicDir)
     pTex->setMagnificationFilter(QOpenGLTexture::Linear);
     pTex->setWrapMode(QOpenGLTexture::Repeat);
 
+
+   
 }
 
 void QOpenGLTest::InitCamera()
@@ -131,14 +146,42 @@ void QOpenGLTest::InitCamera()
     //viewfinderSettings.setPixelFormat(QVideoFrame::Format_RGB24);
     // viewfinderSettings.setResolution(1920, 1080);
     // mCamera = new QCamera;
-    camera.setViewfinderSettings(viewfinderSettings);
-    camera.setViewfinder(pcampture);
-    camera.start();
+
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    foreach(const QCameraInfo &cameraInfo, cameras) {
+        if (nullptr == m_pCamera)
+        {
+            m_pCamera = std::make_shared<QCamera>(cameraInfo);
+        }
+        qDebug() << cameraInfo.deviceName() << endl;
+    }
+
+    m_pCamera->setViewfinderSettings(viewfinderSettings);
+    m_pCamera->setViewfinder(pcampture);
+    m_pCamera->start();
+
+//     camera.setViewfinderSettings(viewfinderSettings);
+//     camera.setViewfinder(pcampture);
+//     camera.start();
+}
+
+void QOpenGLTest::Transform(QMatrix4x4& mTrans)
+{
+    // if we want transform effect .we need bind shader program first 
+    if (shaderProgram.bind())
+    {
+        //transform
+        shaderProgram.setUniformValue("transform", mTrans);
+        shaderProgram.release();
+    }
 }
 
 void QOpenGLTest::UninitCamera()
 {
-    camera.stop();
+    if (m_pCamera)
+    {
+        m_pCamera->stop();
+    }
 }
 
 void QOpenGLTest::initializeGL()
@@ -147,9 +190,11 @@ void QOpenGLTest::initializeGL()
 
     InitShaders();
     InitVertex();
-    LoadTexture(R"(C:\Users\xiaohwa2\source\repos\ToolBox\QOpenGLTest\Resources\1423_7361.25.png)");
-    InitCamera();
-
+//     LoadTexture(R"(C:\Users\xiaohwa2\source\repos\ToolBox\QOpenGLTest\Resources\1423_7361.25.png)");
+//     QMatrix4x4 m;
+//     Transform(m);
+         InitCamera();
+// 
     connect(pcampture, &QtCameraCapture::frameAvailable, this, [this](QVideoFrame cloneFrame) {
         makeCurrent();
         this->LoadTexture(cloneFrame);

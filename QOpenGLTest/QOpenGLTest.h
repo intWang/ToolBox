@@ -25,6 +25,7 @@ private:
     QCamera camera;
     QMutex mxProcess;
     QSize mFrameSize;
+    std::shared_ptr<QCamera> m_pCamera = nullptr;
 
     float mViewAspect;
     float mVideoAspect;
@@ -38,6 +39,7 @@ private:
     void LoadTexture(QVideoFrame& framData);
     void LoadTexture(QString strPicDir);
     void InitCamera();
+    void Transform(QMatrix4x4& mTrans);
     void UninitCamera();
 protected:
     virtual void initializeGL() override;
