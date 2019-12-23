@@ -82,13 +82,15 @@ const char* shaders::vertexShaderTR = R"(#version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColor;
 layout (location = 2) in vec2 aTexture;
-uniform mediump mat4 transform;
+
+uniform mat4 transform;
+
 out vec4 outColor;
 out vec2 outTexture;
 
 void main()
 {
-    gl_Position = transform*vec4(aPos.x, -aPos.y, aPos.z, 1.0);
+    gl_Position = transform *vec4(aPos.x, -aPos.y, aPos.z, 1.0);
     outColor = vec4(aColor, 1.0);
     outTexture = vec2(aTexture.x, aTexture.y);
 }
@@ -106,3 +108,32 @@ void main()
     fragColor = mix(texture(ourTexture, outTexture),outColor,0.3);
 }
 )";
+
+
+const char* shaders::vertexShader3D = R"(#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexture;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec2 outTexture;
+
+void main()
+{
+    gl_Position = projection * view * model *vec4(aPos.x, -aPos.y, aPos.z, 1.0);
+    outTexture = aTexture;
+}
+)";
+
+const char* shaders::fragmentShader3D = R"(#version 330 core
+out vec4 fragColor;
+in vec2 outTexture;
+
+uniform sampler2D ourTexture;
+void main()
+{
+    fragColor = texture(ourTexture, outTexture);
+}
+)";
+
